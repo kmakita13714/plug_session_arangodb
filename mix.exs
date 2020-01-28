@@ -30,6 +30,7 @@ defmodule PlugSessionArangodb.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:plug, "~> 1.1"},
       {:arangox, "~> 0.4.5"},
       {:velocy, "~> 0.1.5"},
