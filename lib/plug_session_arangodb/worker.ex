@@ -1,7 +1,7 @@
 defmodule PlugSessionArangodb.Worker do
   def start_link(name) do
     config = Application.get_env(:arangox, :session, [])
-    {:ok, client} = Arangox.start_link(client: Arangox.GunClient, endpoints: config[:endpoints], username: config[:username], password: config[:password], database: config[:database], pool_size: 3)
+    {:ok, client} = Arangox.start_link(client: Arangox.MintClient, endpoints: config[:endpoints], username: config[:username], password: config[:password], database: config[:database], pool_size: 3)
     true = Process.register(client, name)
     {:ok, client}
   end

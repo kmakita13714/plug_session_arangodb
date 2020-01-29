@@ -22,7 +22,7 @@ defmodule PlugSessionArangodb.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :gun],
+      extra_applications: [:logger],
       mod: {PlugSessionArangodb.Application, []}
     ]
   end
@@ -35,7 +35,7 @@ defmodule PlugSessionArangodb.MixProject do
       {:arangox, "~> 0.4.5"},
       {:velocy, "~> 0.1.5"},
       {:poison, "~> 4.0"},
-      {:gun, "~> 1.3"}
+      {:mint, "~> 0.4.0"}
     ]
   end
 end
