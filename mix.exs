@@ -5,7 +5,7 @@ defmodule PlugSessionArangodb.MixProject do
     [
       app: :plug_session_arangodb,
       build_embedded: Mix.env() == :prod,
-      version: "0.1.2",
+      version: "0.1.3",
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -34,7 +34,7 @@ defmodule PlugSessionArangodb.MixProject do
       {:plug, "~> 1.1"},
       {:arangox, "~> 0.4.5"},
       {:velocy, "~> 0.1.5"},
-      {:poison, "~> 4.0"},
+      {:jason, "~> 1.1"},
       {:mint, "~> 0.4.0"}
     ]
   end
