@@ -7,7 +7,7 @@ The ArangoDB Plug.Session adapter for the Phoenix framework.
 ```elixir
 # mix.exs
 defp deps do
-  [{:plug_session_arangodb, "~> 0.1.2" }]
+  [{:plug_session_arangodb, "~> 0.9.0" }]
 end
 ```
 
@@ -20,7 +20,9 @@ config :arangox, :session,
   endpoints: "http://localhost:8529",
   username: "username",
   password: "password",
-  database: "database"
+  database: "database",
+  collection: "sessions",
+  pool_size: 3
 ```
 
 ## endpoint.ex  

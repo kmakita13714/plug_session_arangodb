@@ -5,8 +5,8 @@ defmodule PlugSessionArangodb.MixProject do
     [
       app: :plug_session_arangodb,
       build_embedded: Mix.env() == :prod,
-      version: "0.1.3",
-      elixir: "~> 1.7",
+      version: "0.9.0",
+      elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: [
@@ -22,8 +22,8 @@ defmodule PlugSessionArangodb.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
-      mod: {PlugSessionArangodb.Application, []}
+      mod: {PlugSessionArangodb.Application, []},
+      extra_applications: [:logger]
     ]
   end
 
@@ -32,7 +32,7 @@ defmodule PlugSessionArangodb.MixProject do
     [
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:plug, "~> 1.1"},
-      {:arangox, "~> 0.4.5"},
+      {:arangox, "~> 0.5.4"},
       {:velocy, "~> 0.1.5"},
       {:jason, "~> 1.1"},
       {:mint, "~> 0.4.0"}

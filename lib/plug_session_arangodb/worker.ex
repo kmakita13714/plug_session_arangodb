@@ -1,38 +1,61 @@
 defmodule PlugSessionArangodb.Worker do
   def start_link(name) do
     config = Application.get_env(:arangox, :session, [])
-    {:ok, client} = Arangox.start_link(client: Arangox.MintClient, endpoints: config[:endpoints], username: config[:username], password: config[:password], database: config[:database], pool_size: 3)
+    {:ok, client} = Arangox.start_link(client: Arangox.MintClient, endpoints: config[:endpoints], username: config[:username], password: config[:password], database: config[:database], pool_size: config[:pool_size])
     true = Process.register(client, name)
+
+    case Arangox.get(pid(), "/_api/collection/" <> config[:collection]) do
+      {:error, error} ->
+        {:ok, response} = Arangox.post(pid(), "/_api/collection", %{ "name" => config[:collection], "keyOptions" => %{ "type" => "uuid" }})
+      _ ->
+        nil
+    end
+
     {:ok, client}
   end
 
   def get(sid) do
-    {:ok, _request, response} = Arangox.put(pid(), "/_api/simple/first-example", %{ "collection" => "sessions", "example" => %{ "session_id": sid }})
+    IO.inspect("get")
+    IO.inspect(sid)
+    config = Application.get_env(:arangox, :session, [])
 
-    { sid, response.body["document"]["session_data"] }
+    {:ok, response} = Arangox.get(pid(), "/_db/" <> config[:database] <> "/_api/document/" <> config[:collection] <> "/" <> sid)
+    IO.inspect(response)
+
+    { sid, response.body["session_data"] }
   end
 
   def create(data) do
-    {:ok, _request, response} = Arangox.post(pid(), "/_api/document/sessions", %{ "session_data": data })
+    IO.inspect("create")
+    IO.inspect(data)
+    config = Application.get_env(:arangox, :session, [])
 
-    session_id = :crypto.hash(:md5, response.body["_key"]) |> Base.encode16(case: :upper)
-    {:ok, _request, _response} = Arangox.patch(pid(), "/_api/document/sessions/" <> response.body["_key"], %{ "session_id": session_id })
+    {:ok, response} = Arangox.post(pid(), "/_db/" <> config[:database] <> "/_api/document/" <> config[:collection], %{ "session_data": data })
+    IO.inspect(response)
 
-    session_id
+    response.body["_key"]
   end
 
   def update(sid, data) do
-    {:ok, _request, response} = Arangox.put(pid(), "/_api/simple/first-example", %{ "collection" => "sessions", "example" => %{ "session_id": sid }})
+    IO.inspect("update")
+    IO.inspect(sid)
+    IO.inspect(data)
+    config = Application.get_env(:arangox, :session, [])
 
-    {:ok, _request, _response} = Arangox.put(pid(), "/_api/document/sessions/" <> response.body["document"]["_key"], %{ "session_id": sid, "session_data": data })
+    {:ok, response} = Arangox.put(pid(), "/_db/" <> config[:database] <> "/_api/document/" <> config[:collection] <> "/" <> sid, %{ "session_data": data })
+    IO.inspect(response)
 
     sid
   end
 
   def remove(sid) do
-    {:ok, _request, response} = Arangox.put(pid(), "/_api/simple/first-example", %{ "collection" => "sessions", "example" => %{ "session_id": sid }})
+    IO.inspect("remove")
+    IO.inspect(sid)
+    config = Application.get_env(:arangox, :session, [])
 
-    {:ok, _request, _response} = Arangox.delete(pid(), "/_api/document/sessions/" <> response.body["document"]["_key"])
+    {:ok, response} = Arangox.delete(pid(), "/_db/" <> config[:database] <> "/_api/document/" <> config[:collection] <> "/" <> sid)
+    IO.inspect(response)
+
     :ok
   end
 
